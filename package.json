@@ -1,61 +1,68 @@
 {
-  "name": "CAP-captofiori",
-  "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@sap/cds": "^6",
-    "express": "^4",
-    "hdb": "^0.19.0",
-    "@sap/xssec": "^3",
-    "passport": "^0"
-  },
-  "devDependencies": {
-    "sqlite3": "^5.0.4"
-  },
-  "scripts": {
-    "start": "cds run",
-    "deploy": "npm i && mbt build && cf deploy mta_archives/captofiori_1.0.0.mtar --retries 1",
-    "undeploy": "cf undeploy captofiori --delete-services --delete-service-keys --delete-service-brokers"
-  },
-  "engines": {
-    "node": "^16.15"
-  },
-  "eslintConfig": {
-    "extends": "eslint:recommended",
-    "env": {
-      "es2020": true,
-      "node": true,
-      "jest": true,
-      "mocha": true
+    "name": "CAP-fiorielements",
+    "version": "1.0.0",
+    "description": "A simple CAP project.",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@sap/cds": "^6",
+        "@sap/xssec": "^3",
+        "express": "^4",
+        "hdb": "^0.19.0",
+        "passport": "^0"
     },
-    "globals": {
-      "SELECT": true,
-      "INSERT": true,
-      "UPDATE": true,
-      "DELETE": true,
-      "CREATE": true,
-      "DROP": true,
-      "CDL": true,
-      "CQL": true,
-      "CXL": true,
-      "cds": true
+    "devDependencies": {
+        "@sap/ux-specification": "^1.102.16",
+        "sqlite3": "^5.0.4",
+        "rimraf": "^3.0.2"
     },
-    "rules": {
-      "no-console": "off",
-      "require-atomic-updates": "off"
-    }
-  },
-  "cds": {
-    "requires": {
-      "db": {
-        "kind": "hana-cloud"
-      },
-      "auth": {
-        "kind": "xsuaa"
-      }
-    }
-  }
+    "scripts": {
+        "start": "cds run",
+        "deploy": "npm i && mbt build && cf deploy mta_archives/fiorielements_1.0.0.mtar --retries 1",
+        "undeploy": "cf undeploy fiorielements --delete-services --delete-service-keys --delete-service-brokers",
+        "watch-fiorielist": "cds watch --open fiorielist/webapp/index.html?sap-ui-xx-viewCache=false",
+        "build": "rimraf resources mta_archives && mbt build --mtar archive"
+    },
+    "engines": {
+        "node": "^16.15"
+    },
+    "eslintConfig": {
+        "extends": "eslint:recommended",
+        "env": {
+            "es2020": true,
+            "node": true,
+            "jest": true,
+            "mocha": true
+        },
+        "globals": {
+            "SELECT": true,
+            "INSERT": true,
+            "UPDATE": true,
+            "DELETE": true,
+            "CREATE": true,
+            "DROP": true,
+            "CDL": true,
+            "CQL": true,
+            "CXL": true,
+            "cds": true
+        },
+        "rules": {
+            "no-console": "off",
+            "require-atomic-updates": "off"
+        }
+    },
+    "cds": {
+        "requires": {
+            "db": {
+                "kind": "hana-cloud"
+            },
+            "auth": {
+                "kind": "xsuaa"
+            }
+        }
+    },
+    "sapux": [
+        "app/fiorielist"
+    ]
 }

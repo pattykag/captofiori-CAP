@@ -1,14 +1,14 @@
 _schema-version: "3.1"
-ID: CAP-captofiori
+ID: fiorielements
 description: A simple CAP project.
 version: 1.0.0
 modules:
-- name: CAP-captofiori-srv
+- name: CAP-fiorielements-srv
   type: nodejs
   path: gen/srv
   requires:
-  - name: CAP-captofiori-db
-  - name: CAP-captofiori-auth
+  - name: CAP-fiorielements-db
+  - name: CAP-fiorielements-auth
   provides:
   - name: srv-api
     properties:
@@ -17,73 +17,108 @@ modules:
     buildpack: nodejs_buildpack
   build-parameters:
     builder: npm-ci
-- name: CAP-captofiori-db-deployer
+- name: CAP-fiorielements-db-deployer
   type: hdb
   path: gen/db
   requires:
-  - name: CAP-captofiori-db
+  - name: CAP-fiorielements-db
   parameters:
     buildpack: nodejs_buildpack
-- name: CAP-captofiori-destination-content
+- name: CAP-fiorielements-destination-content
   type: com.sap.application.content
   requires:
-  - name: CAP-captofiori-destination-service
+  - name: CAP-fiorielements-destination-service
     parameters:
       content-target: true
-  - name: CAP-captofiori_html_repo_host
+  - name: CAP-fiorielements_html_repo_host
     parameters:
       service-key:
-        name: CAP-captofiori_html_repo_host-key
-  - name: CAP-captofiori-auth
+        name: CAP-fiorielements_html_repo_host-key
+  - name: CAP-fiorielements-auth
     parameters:
       service-key:
-        name: CAP-captofiori-auth-key
+        name: CAP-fiorielements-auth-key
   parameters:
     content:
       instance:
         destinations:
-        - Name: acc_route_CAP_captofiori_html_repo_host
-          ServiceInstanceName: CAP-captofiori-html5-app-host-service
-          ServiceKeyName: CAP-captofiori_html_repo_host-key
-          sap.cloud.service: acc.route
+        - Name: fiorielementsns_CAP_fiorielements_html_repo_host
+          ServiceInstanceName: CAP-fiorielements-html5-app-host-service
+          ServiceKeyName: CAP-fiorielements_html_repo_host-key
+          sap.cloud.service: fiorielementsns
         - Authentication: OAuth2UserTokenExchange
-          Name: acc_route_CAP_captofiori_auth
-          ServiceKeyName: CAP-captofiori-auth-key
-          sap.cloud.service: acc.route
+          Name: fiorielementsns_CAP_fiorielements_auth
+          ServiceInstanceName: CAP-fiorielements-auth
+          ServiceKeyName: CAP-fiorielements-auth-key
+          sap.cloud.service: fiorielementsns
         existing_destinations_policy: ignore
   build-parameters:
     no-source: true
+- name: CAP-fiorielements-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: CAP-fiorielements_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - fiorielistfiorielist.zip
+      name: fiorielistfiorielist
+      target-path: resources/
+- name: fiorielistfiorielist
+  type: html5
+  path: app/fiorielist
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
 resources:
-- name: CAP-captofiori-db
+- name: CAP-fiorielements-db
   type: com.sap.xs.hdi-container
   parameters:
     service: hana
     service-plan: hdi-shared
-- name: CAP-captofiori-auth
+- name: CAP-fiorielements-auth
   type: org.cloudfoundry.managed-service
   parameters:
     config:
       tenant-mode: dedicated
-      xsappname: CAP-captofiori-${org}-${space}
+      xsappname: CAP-fiorielements-${org}-${space}
     path: ./xs-security.json
     service: xsuaa
     service-plan: application
-- name: CAP-captofiori-destination-service
+- name: CAP-fiorielements-destination-service
   type: org.cloudfoundry.managed-service
   parameters:
     config:
       HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
       version: 1.0.0
     service: destination
-    service-name: CAP-captofiori-destination-service
+    service-name: CAP-fiorielements-destination-service
     service-plan: lite
-- name: CAP-captofiori_html_repo_host
+- name: CAP-fiorielements_html_repo_host
   type: org.cloudfoundry.managed-service
   parameters:
     service: html5-apps-repo
-    service-name: CAP-captofiori-html5-app-host-service
+    service-name: CAP-fiorielements-html5-app-host-service
     service-plan: app-host
 parameters:
+  deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:

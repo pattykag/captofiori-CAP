@@ -1,5 +1,5 @@
 {
-  "xsappname": "cap-captofiori",
+  "xsappname": "cap-fiorielements",
   "tenant-mode": "dedicated",
   "description": "Security profile of called application",
   "scopes": [
